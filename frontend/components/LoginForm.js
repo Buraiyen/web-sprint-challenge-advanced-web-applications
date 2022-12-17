@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PT from 'prop-types';
 import axios from 'axios';
 
@@ -6,11 +7,13 @@ const initialFormValues = {
   username: '',
   password: '',
 };
+
 export default function LoginForm(props) {
   const [values, setValues] = useState(initialFormValues);
   const [buttonDisabled, setButtonDisabled] = useState(true);
-  // ✨ where are my props? Destructure them here
+  const navigate = useNavigate();
 
+  // ✨ where are my props? Destructure them here
   useEffect(() => {
     setButtonDisabled(
       !(
@@ -25,6 +28,7 @@ export default function LoginForm(props) {
   };
 
   const onSubmit = (evt) => {
+    props.setSpinnerOn(true);
     evt.preventDefault();
     // ✨ implement
     const URL = 'http://localhost:9000/api/login';
@@ -32,10 +36,13 @@ export default function LoginForm(props) {
     axios
       .post(URL, values)
       .then((res) => {
-        console.log(res);
+        localStorage.setItem('token', res.data.token);
+        navigate('/articles');
+        props.setSpinnerOn(false);
       })
       .catch((err) => {
         console.error(`UH OH ERROR: ${err}`);
+        props.setSpinnerOn(false);
       });
   };
 
