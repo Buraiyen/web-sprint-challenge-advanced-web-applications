@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PT from 'prop-types';
+import axios from 'axios';
 
 const initialFormValues = {
   username: '',
@@ -10,25 +11,32 @@ export default function LoginForm(props) {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   // ✨ where are my props? Destructure them here
 
+  useEffect(() => {
+    setButtonDisabled(
+      !(
+        values.username.trim().length >= 3 && values.password.trim().length >= 8
+      )
+    );
+  }, [values]);
+
   const inputChangeHandler = (evt) => {
     const { id, value } = evt.target;
     setValues({ ...values, [id]: value });
-    setButtonDisabled(
-      !(values.username.trimEnd() >= 3 && values.password.trimEnd() >= 8)
-    );
   };
 
   const onSubmit = (evt) => {
     evt.preventDefault();
     // ✨ implement
-  };
-
-  const isDisabled = () => {
-    // ✨ implement
-    // Trimmed username must be >= 3, and
-    // trimmed password must be >= 8 for
-    // the button to become enabled
-    return;
+    const URL = 'http://localhost:9000/api/login';
+    // creds: Learner Bloomtech
+    axios
+      .post(URL, values)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(`UH OH ERROR: ${err}`);
+      });
   };
 
   return (
