@@ -71,6 +71,9 @@ export default function App() {
       });
   };
 
+  /*
+  NOTE: spinner doesn't work 
+  */
   const postArticle = (article) => {
     // ✨ implement
     // The flow is very similar to the `getArticles` function.
@@ -81,7 +84,7 @@ export default function App() {
       .post(articlesUrl, article)
       .then((res) => {
         setMessage(res.data.message);
-        setArticles([...articles, article]);
+        setArticles([...articles, res.data.article]);
       })
       .catch((err) => {
         console.error(`ERROR IN postArticle: ${err}`);
