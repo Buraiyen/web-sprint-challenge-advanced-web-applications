@@ -11,7 +11,7 @@ export default function Articles(props) {
   useEffect(() => {
     // ✨ grab the articles here, on first render only
     props.getArticles();
-  });
+  }, []);
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
