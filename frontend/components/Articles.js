@@ -42,7 +42,7 @@ export default function Articles(props) {
                   >
                     Edit
                   </button>
-                  <button disabled={true} onClick={Function.prototype}>
+                  <button onClick={() => props.deleteArticle(art.article_id)}>
                     Delete
                   </button>
                 </div>

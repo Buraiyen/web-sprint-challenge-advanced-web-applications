@@ -41,11 +41,11 @@ export default function ArticleForm(props) {
     // depending on the truthyness of the `currentArticle` prop.
     setValues(initialFormValues);
     if (isEditing) {
+      setIsEditing(false);
       props.updateArticle({
         article: { ...values },
         article_id: props.currentArticle.article_id,
       });
-      setIsEditing(false);
     } else {
       props.postArticle(values);
     }

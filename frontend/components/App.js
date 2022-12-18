@@ -116,6 +116,21 @@ export default function App() {
 
   const deleteArticle = (article_id) => {
     // ✨ implement
+    const articlesCopy = [...articles];
+    const filteredArticles = articlesCopy.filter((currentArticle) => {
+      return currentArticle.article_id !== article_id;
+    });
+    console.log(filteredArticles);
+
+    axiosWithAuth()
+      .delete(`${articlesUrl}/${article_id}`)
+      .then((res) => {
+        setMessage(res.data.message);
+        setArticles(filteredArticles);
+      })
+      .catch((err) => {
+        console.error(`ERROR IN deleteArticle: ${err}`);
+      });
   };
 
   const extractArticle = (article_id, title, text, topic) => {
