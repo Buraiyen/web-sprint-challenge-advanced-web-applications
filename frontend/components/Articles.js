@@ -29,7 +29,17 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={true} onClick={Function.prototype}>
+                  <button
+                    disabled={false}
+                    onClick={() =>
+                      props.extractArticle(
+                        art.article_id,
+                        art.title,
+                        art.text,
+                        art.topic
+                      )
+                    }
+                  >
                     Edit
                   </button>
                   <button disabled={true} onClick={Function.prototype}>

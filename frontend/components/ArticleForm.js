@@ -6,6 +6,7 @@ const initialFormValues = { title: '', text: '', topic: '' };
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues);
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   // ✨ where are my props? Destructure them here
 
   useEffect(() => {
@@ -20,7 +21,13 @@ export default function ArticleForm(props) {
         values.topic.length > 0
       )
     );
-  }, [values]);
+    if (props.currentArticle === undefined) return;
+
+    if (!isEditing) {
+      setValues(props.currentArticle);
+      setIsEditing(true);
+    }
+  }, [values, props.currentArticle]);
 
   const onChange = (evt) => {
     const { id, value } = evt.target;
@@ -33,7 +40,15 @@ export default function ArticleForm(props) {
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
     setValues(initialFormValues);
-    props.postArticle(values);
+    if (isEditing) {
+      props.updateArticle({
+        article: { ...values },
+        article_id: props.currentArticle.article_id,
+      });
+      setIsEditing(false);
+    } else {
+      props.postArticle(values);
+    }
   };
 
   const isDisabled = () => {
@@ -45,7 +60,7 @@ export default function ArticleForm(props) {
     // ✨ fix the JSX: make the heading display either "Edit" or "Create"
     // and replace Function.prototype with the correct function
     <form id='form' onSubmit={onSubmit}>
-      <h2>Create Article</h2>
+      <h2>{isEditing ? 'Edit' : 'Create'} Article</h2>
       <input
         maxLength={50}
         onChange={onChange}
@@ -70,7 +85,7 @@ export default function ArticleForm(props) {
         <button disabled={buttonDisabled} id='submitArticle'>
           Submit
         </button>
-        <button onClick={Function.prototype}>Cancel edit</button>
+        {isEditing && <button onClick={Function.prototype}>Cancel edit</button>}
       </div>
     </form>
   );

@@ -16,6 +16,7 @@ export default function App() {
   const [message, setMessage] = useState('');
   const [articles, setArticles] = useState([]);
   const [currentArticleId, setCurrentArticleId] = useState();
+  const [currentArticle, setCurrentArticle] = useState();
   const [spinnerOn, setSpinnerOn] = useState(false);
 
   // ✨ Research `useNavigate` in React Router v.6
@@ -95,10 +96,35 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    // console.log(article_id);
+    setCurrentArticle({ title: '', text: '', topic: '' });
+    axiosWithAuth()
+      .put(`${articlesUrl}/${article_id}`, article)
+      .then((res) => {
+        setMessage(res.data.message);
+        const articlesCopy = [...articles];
+        const index = articlesCopy.findIndex(
+          (x) => x.article_id === article_id
+        );
+        articlesCopy[index] = article;
+        setArticles(articlesCopy);
+      })
+      .catch((err) => {
+        console.log(`ERROR IN updateArticle: ${err}`);
+      });
   };
 
   const deleteArticle = (article_id) => {
     // ✨ implement
+  };
+
+  const extractArticle = (article_id, title, text, topic) => {
+    setCurrentArticle({
+      article_id,
+      title,
+      text,
+      topic,
+    });
   };
 
   return (
@@ -137,11 +163,14 @@ export default function App() {
                     postArticle={postArticle}
                     updateArticle={updateArticle}
                     setCurrentArticleId={setCurrentArticleId}
+                    currentArticleId={currentArticleId}
+                    currentArticle={currentArticle}
                   />
                   <Articles
                     getArticles={getArticles}
                     deleteArticle={deleteArticle}
                     setCurrentArticleId={setCurrentArticleId}
+                    extractArticle={extractArticle}
                     articles={articles}
                   />
                 </>
